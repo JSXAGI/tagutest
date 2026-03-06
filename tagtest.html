@@ -1,0 +1,101 @@
+
+HTML
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Gemini & 監督：タグ実験場</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #1e1e1e;
+            margin: 0; padding: 20px;
+            height: 100vh; box-sizing: border-box;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .header {
+            background: #2c3e50; color: #ecf0f1; padding: 12px 25px;
+            font-weight: bold; border-radius: 12px 12px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .main-container {
+            display: flex; flex: 1; background: #252526;
+            border-radius: 0 0 12px 12px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .pane-left {
+            flex: 1; display: flex; flex-direction: column;
+            background: #1e1e1e; border-right: 1px solid #333; position: relative;
+        }
+        /* 🌟 監督ご要望のクリアボタンだゾ！ */
+        .clear-btn {
+            position: absolute; top: 10px; right: 15px;
+            background: rgba(231, 76, 60, 0.2); color: #e74c3c;
+            border: 1px solid #e74c3c; padding: 4px 12px;
+            border-radius: 6px; font-size: 11px; cursor: pointer; z-index: 5;
+        }
+        #input-area {
+            flex: 1; padding: 40px 20px 20px 20px;
+            background: transparent; color: #d4d4d4;
+            font-family: 'Consolas', monospace; font-size: 15px;
+            border: none; outline: none; resize: none;
+        }
+        .pane-right { flex: 1; display: flex; flex-direction: column; background: #ffffff; }
+        #output-area { flex: 1; padding: 0; overflow: auto; background: white; }
+        .label { font-size: 11px; color: #888; padding: 8px 20px; background: rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span>👨💻 TAG EXPERIMENT FIELD</span>
+        <span style="font-size: 0.75rem;">監督、トコトン使い倒してゾ！</span>
+    </div>
+    <div class="main-container">
+        <div class="pane-left">
+            <div class="label">Editor</div>
+            <button class="clear-btn" onclick="clearEditor()">CLEAR</button>
+            <textarea id="input-area" spellcheck="false" placeholder="ここにコードを書いてゾ！"></textarea>
+        </div>
+        <div class="pane-right">
+            <div class="label" style="background:#f8f8f8; color:#999;">Preview</div>
+            <iframe id="output-frame" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
+    </div>
+    <script>
+        const input = document.getElementById('input-area');
+        const frame = document.getElementById('output-frame');
+        function update() {
+            const doc = frame.contentDocument || frame.contentWindow.document;
+            doc.open();
+            doc.write(input.value);
+            doc.close();
+        }
+        input.addEventListener('input', update);
+        function clearEditor() {
+            if(confirm('全部消しちゃうゾ？')) {
+                input.value = '';
+                update();
+                input.focus();
+            }
+        }
+        // 初期サンプル（さっきの背景テスト用だゾ！）
+        input.value = `
+<style>
+  body {
+    margin: 0; padding: 20px;
+    background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%) fixed;
+    min-height: 100vh; font-family: sans-serif;
+  }
+  .box {
+    background: rgba(255, 255, 255, 0.3); /* ←ここを0.1にするともっと透けるゾ */
+    padding: 50px; border-radius: 20px; text-align: center;
+  }
+</style>
+<div class="box">
+  <h1 style="color:#00796b;">背景テスト中だゾ！</h1>
+  <p>白すぎる時は、rgbaの最後の数字を小さくしてゾ。</p>
+</div>`;
+        update();
+    </script>
+</body>
+</html>
